@@ -62,7 +62,7 @@ export class LoginService {
     ).toPromise();
   }
 
-  public getCookieWithJwtToken({ expireTime, payload }: {
+  public getJwtToken({ expireTime, payload }: {
     expireTime: number
     payload: {
       userId: string,

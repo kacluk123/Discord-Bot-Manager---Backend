@@ -22,7 +22,7 @@ interface IDiscordUserResponse {
   public_flags?: number
 }
 
-interface IDiscordUserMappedResponse {
+export interface IDiscordUserMappedResponse {
   id: string
   username: string
   discriminator: string

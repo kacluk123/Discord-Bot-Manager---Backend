@@ -7,10 +7,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './users/users.controller';
 import { LoginController } from './auth/login/login.controller';
 import { UsersModule } from './users/users.module'; 
+import { CookiesModule } from './cookies/cookies.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot(configService.getTypeOrmConfig()), UsersModule, LoginModule],
+  imports: [TypeOrmModule.forRoot(configService.getTypeOrmConfig()), UsersModule, LoginModule, CookiesModule],
   controllers: [AppController],
   providers: [AppService],
 })
