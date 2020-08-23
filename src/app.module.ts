@@ -8,11 +8,13 @@ import { UsersController } from './users/users.controller';
 import { LoginController } from './auth/login/login.controller';
 import { UsersModule } from './users/users.module'; 
 import { CookiesModule } from './cookies/cookies.module';
+import { BotsController } from './bots/bots.controller';
+import { BotsModule } from './bots/bots.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot(configService.getTypeOrmConfig()), UsersModule, LoginModule, CookiesModule],
-  controllers: [AppController],
+  imports: [TypeOrmModule.forRoot(configService.getTypeOrmConfig()), UsersModule, LoginModule, CookiesModule, BotsModule],
+  controllers: [AppController, BotsController],
   providers: [AppService],
 })
 export class AppModule {}
