@@ -22,7 +22,6 @@ export class CookieInterceptor implements NestInterceptor {
       tap(() => {
         const cookies = req._cookies;
         if (cookies.length) {
-          console.log(this.cookiesService)
           this.cookiesService.setCookies(res, cookies)
         }
       }),
