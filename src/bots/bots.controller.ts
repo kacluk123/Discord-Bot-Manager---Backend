@@ -1,16 +1,14 @@
-import { Controller, Get, Redirect, Res, Query, Req, UseInterceptors, UseGuards  } from '@nestjs/common';
+import { Controller, Get, Redirect, Res, Query, Req, UseInterceptors, UseGuards, Post, Body  } from '@nestjs/common';
 import { JwtAuthenticationGuard } from '../auth/jwt/jwt.guard'
 import { Response, Request } from 'express'
+import { CreateBotDto } from './bots.validators'
 
-@Controller('bots')
+@Controller()
 export class BotsController {
-  
   @UseGuards(JwtAuthenticationGuard)
-  @Get()
-  test(@Res() response: Response) {
-    console.log(response)
-    return {
-      hello: 'dasdad'
-    }
+  @Post('bots/add-bot')
+  addBot(@Res() response: Response, @Body() body: CreateBotDto) {
+    console.log(body)
+    return body
   }
 }

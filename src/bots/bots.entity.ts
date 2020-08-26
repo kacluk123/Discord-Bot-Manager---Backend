@@ -18,4 +18,7 @@ export class Bots {
 
   @Column()
   token: string;
+
+  @Column()
+  userId: string;
 }
