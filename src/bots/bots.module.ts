@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Bots } from './bots.entity'
 @Module({
   providers: [BotsService],
+  exports: [BotsService],
   controllers: [BotsController],
   imports: [TypeOrmModule.forFeature([Bots])]
 })

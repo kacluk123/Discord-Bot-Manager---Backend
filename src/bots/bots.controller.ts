@@ -1,14 +1,25 @@
-import { Controller, Get, Redirect, Res, Query, Req, UseInterceptors, UseGuards, Post, Body  } from '@nestjs/common';
+import { Controller, Get, Redirect, Res, Query, Req, UseInterceptors, UseGuards, Post, Body, HttpException  } from '@nestjs/common';
 import { JwtAuthenticationGuard } from '../auth/jwt/jwt.guard'
 import { Response, Request } from 'express'
 import { CreateBotDto } from './bots.validators'
+import { BotsService } from './bots.service'
 
-@Controller()
+@Controller('bots')
 export class BotsController {
+  constructor(
+    private readonly botsService: BotsService,
+  ) {}
+  
   @UseGuards(JwtAuthenticationGuard)
-  @Post('bots/add-bot')
-  addBot(@Res() response: Response, @Body() body: CreateBotDto) {
-    console.log(body)
-    return body
+  @Post()
+  async addBot(@Body() body: CreateBotDto) {
+    const ifBotExist = await this.botsService.checkThatKeyExist(body.token)
+    
+    if (ifBotExist) {
+      throw new HttpException('Bot with this token already exist', 409)
+    } else {
+      const createdBot = await this.botsService.addBot(body)
+      return createdBot
+    }
   }
 }
