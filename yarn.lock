@@ -805,6 +805,14 @@
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-2.0.3.tgz#c893b73721db73699943bfc3653b1deb7faa4a3a"
   integrity sha512-Jus9s4CDbqwocc5pOAnh8ShfrnMcPHuJYzVcSUU7lrh8Ni5HuIqX3oilL86p3dlTrk0LzHRCgA/GQ7uNCw6l2Q==
 
+"@types/mock-req-res@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@types/mock-req-res/-/mock-req-res-1.1.2.tgz#624607cde786db4cfbeee21c8fb1a2ed035a62ca"
+  integrity sha512-EDnLJUzUmYD9vhHPxixkRz5lOF/30xwBmfSt65G4unIbs5r8Cb4kIif6bJ2+h760qrUpceev9dnPOPqZP8EMGQ==
+  dependencies:
+    "@types/express" "*"
+    "@types/sinon" "*"
+
 "@types/node-fetch@^2.5.7":
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.5.7.tgz#20a2afffa882ab04d44ca786449a276f9f6bbf3c"
@@ -879,6 +887,18 @@
   dependencies:
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
+
+"@types/sinon@*":
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-9.0.5.tgz#56b2a12662dd8c7d081cdc511af5f872cb37377f"
+  integrity sha512-4CnkGdM/5/FXDGqL32JQ1ttVrGvhOoesLLF7VnTh4KdjK5N5VQOtxaylFqqTjnHx55MnD9O02Nbk5c1ELC8wlQ==
+  dependencies:
+    "@types/sinonjs__fake-timers" "*"
+
+"@types/sinonjs__fake-timers@*":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.1.tgz#681df970358c82836b42f989188d133e218c458e"
+  integrity sha512-yYezQwGWty8ziyYLdZjwxyMb0CZR49h8JALHGrxjQHWlqGgc8kLdHEgWrgL0uZ29DMvEVBDnHU2Wg36zKSIUtA==
 
 "@types/source-list-map@*":
   version "0.1.2"
@@ -4993,6 +5013,11 @@ mkdirp@^0.5.1, mkdirp@^0.5.3:
   integrity sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==
   dependencies:
     minimist "^1.2.5"
+
+mock-req-res@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/mock-req-res/-/mock-req-res-1.2.0.tgz#e96dcbba058f78ff56a367a903afb34f184e127b"
+  integrity sha512-QSgNO7KQBwNEWWffZyg6iMNWxcpeYLF/Wdkgsem3xD80tYw//QEqbvAM0JWB72f4bxz99DFdGKCPdaomdS56JA==
 
 move-concurrently@^1.0.1:
   version "1.0.1"

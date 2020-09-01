@@ -6,19 +6,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Bots } from './bots.entity'
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { configService } from '../config/config.service'
+import { HttpException } from '@nestjs/common';
+import { ICreateBotBody } from './bots.controller'
+import { Request } from 'express'
+import { mockRequest } from 'mock-req-res'
 
-const botPayload: CreateBotDto = {
+const botPayload: ICreateBotBody = {
   name: "testUser",
   type: "ads",
   isActive: true,
   token: "testToken",
-  userId: "testUserID"
 }
+
+const req = mockRequest()
 
 describe('Bots Controller', () => {
   let controller: BotsController;
   let service: BotsService
   let typeOrm: TypeOrmModule
+
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -44,7 +50,7 @@ describe('Bots Controller', () => {
       ...botPayload,
       id: 'testId'
     }));
-    const mewBot = await controller.addBot(botPayload)
+    const mewBot = await controller.addBot(req, botPayload)
     
     expect(mewBot).toEqual({
       ...botPayload,
@@ -52,20 +58,19 @@ describe('Bots Controller', () => {
     })
   })
 
-  it('should should not create new bot', async () => {
+  it('should not create new bot', async () => {
     jest.spyOn(service, 'checkThatKeyExist').mockImplementation(async () => true);
     jest.spyOn(service, 'addBot').mockImplementation(async () => ({
       ...botPayload,
-      id: 'testId'
+      id: 'testId',
+      userId: 'testId'
     }));
     try {
-      const bot = await controller.addBot(botPayload)
+      const bot = await controller.addBot(response, botPayload)
     } catch (e) {
-      console.log(e)
-      expect(e).toContain({
-        status: 409,
-        message: 'Bot with this token already exist'
-      })
+      expect(e).toBeInstanceOf(HttpException)
+      expect(e.response).toBe('Bot with this token already exist')
+      expect(e.status).toBe(409)
     }
   })
 });

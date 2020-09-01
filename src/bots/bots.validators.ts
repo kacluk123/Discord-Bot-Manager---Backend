@@ -16,9 +16,5 @@ export class CreateBotDto {
   @IsString()
   @IsNotEmpty()
   token: string;
-
-  @IsString()
-  @IsNotEmpty()
-  userId: string;
 }
 

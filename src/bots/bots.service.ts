@@ -5,11 +5,13 @@ import { Repository } from 'typeorm';
 import { botTypes } from './bots.entity'
 import { throwIfEmpty } from 'rxjs/operators';
 import { CreateBotDto } from './bots.validators'
+import { ICreateBotBody } from './bots.controller'
 
-interface IBot {
+export interface IBot {
+  id: string
   name: string,
   type: botTypes,
-  isActive: true,
+  isActive: boolean,
   token: string,
   userId: string
 }
@@ -18,8 +20,8 @@ interface IBot {
 export class BotsService {
   constructor(@InjectRepository(Bots) private readonly repo: Repository<Bots>) {}
 
-  public async addBot(botData: CreateBotDto) {
-    const bot = await this.repo.save<CreateBotDto>(botData)
+  public async addBot(botData: ICreateBotBody): Promise<IBot> {
+    const bot = await this.repo.save<ICreateBotBody>(botData)
     return bot
   }
 
@@ -27,5 +29,11 @@ export class BotsService {
     const bot = await this.repo.findOne({ token });
     
     return Boolean(bot)
+  }
+
+  public async getBot(botId: string): Promise<IBot> {
+    const bot = await this.repo.findOne({ id: botId });
+
+    return bot
   }
 }
