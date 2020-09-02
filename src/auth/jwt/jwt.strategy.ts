@@ -4,13 +4,15 @@ import { Injectable } from '@nestjs/common';
 import JwtSercet from '../../config/jwt.secret'
 import { Request, Response } from 'express';
 
+export interface IUser {
+  userId: string,
+  discordToken: string,
+  iat: number,
+  exp: number
+}
+
 export interface RequestWithUser extends Request {
-  user: {
-    userId: string,
-    discordToken: string,
-    iat: number,
-    exp: number
-  }
+  user: IUser
 }
 
 @Injectable()
