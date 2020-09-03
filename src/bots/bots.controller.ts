@@ -21,7 +21,6 @@ export class BotsController {
   @Post('/add-bot')
   async addBot(@User() user: IUser, @Body() body: CreateBotDto) {
     const ifBotExist = await this.botsService.checkThatKeyExist(body.token)
-    console.log(user)
     if (ifBotExist) {
       throw new HttpException('Bot with this token already exist', 409)
     } else {

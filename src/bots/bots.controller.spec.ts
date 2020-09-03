@@ -9,16 +9,25 @@ import { configService } from '../config/config.service'
 import { HttpException } from '@nestjs/common';
 import { ICreateBotBody } from './bots.controller'
 import { Request } from 'express'
-import { mockRequest } from 'mock-req-res'
 
-const botPayload: ICreateBotBody = {
+const botPayload: {
+  name: string,
+  type: "ads" | "music",
+  isActive: boolean,
+  token: string
+} = {
   name: "testUser",
   type: "ads",
   isActive: true,
   token: "testToken",
 }
 
-const req = mockRequest()
+const fakeUser = {
+  userId: 'testUserId',
+  discordToken: 'testToken',
+  iat: 9999,
+  exp: 9999
+}
 
 describe('Bots Controller', () => {
   let controller: BotsController;
@@ -46,15 +55,23 @@ describe('Bots Controller', () => {
   // });
   it('should create new bot', async () => {
     jest.spyOn(service, 'checkThatKeyExist').mockImplementation(async () => false);
-    jest.spyOn(service, 'addBot').mockImplementation(async () => ({
+    const addBotMock = jest.spyOn(service, 'addBot').mockImplementation(async () => ({
       ...botPayload,
-      id: 'testId'
+      userId: 'testUserId',
+      id: 'testBotId'
     }));
-    const mewBot = await controller.addBot(req, botPayload)
-    
+
+    const mewBot = await controller.addBot(fakeUser, botPayload)
+
+    expect(addBotMock).toBeCalledWith({
+      userId: 'testUserId',
+      ...botPayload
+    })
+
     expect(mewBot).toEqual({
       ...botPayload,
-      id: 'testId'
+      id: 'testBotId',
+      userId: 'testUserId',
     })
   })
 
@@ -62,15 +79,49 @@ describe('Bots Controller', () => {
     jest.spyOn(service, 'checkThatKeyExist').mockImplementation(async () => true);
     jest.spyOn(service, 'addBot').mockImplementation(async () => ({
       ...botPayload,
-      id: 'testId',
-      userId: 'testId'
+      id: 'testBotId',
+      userId: 'testUserId'
     }));
     try {
-      const bot = await controller.addBot(response, botPayload)
+      const bot = await controller.addBot(fakeUser, botPayload)
     } catch (e) {
       expect(e).toBeInstanceOf(HttpException)
       expect(e.response).toBe('Bot with this token already exist')
       expect(e.status).toBe(409)
+    }
+  })
+
+  it('should get new bot', async () => {
+    const getBotMock = jest.spyOn(service, 'getBot').mockImplementation(async () => ({
+      ...botPayload,
+      id: 'testBotId',
+      userId: 'testUserId'
+    }));
+
+    const bot = await controller.getBot(fakeUser, { id: 'testBotId' })
+    
+    expect(getBotMock).toBeCalledWith('testBotId')
+
+    expect(bot).toEqual({
+      ...botPayload,
+      id: 'testBotId',
+      userId: 'testUserId',
+    })
+  })
+
+  it('should not get new bot when user ID not equal', async () => {
+    const getBotMock = jest.spyOn(service, 'getBot').mockImplementation(async () => ({
+      ...botPayload,
+      id: 'testBotId',
+      userId: 'testUserId2'
+    }));
+
+    try {
+      const bot = await controller.getBot(fakeUser, { id: 'testBotId' })
+    } catch (e) {
+      expect(e).toBeInstanceOf(HttpException)
+      expect(e.response).toBe('Bot is not exist')
+      expect(e.status).toBe(401)
     }
   })
 });

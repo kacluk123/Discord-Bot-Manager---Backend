@@ -44,7 +44,6 @@
     "cookie-parser": "^1.4.5",
     "cross-env": "^7.0.2",
     "jsonwebtoken": "^8.5.1",
-    "mock-req-res": "^1.2.0",
     "node-fetch": "^2.6.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
