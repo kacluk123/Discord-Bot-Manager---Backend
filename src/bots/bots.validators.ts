@@ -18,3 +18,16 @@ export class CreateBotDto {
   token: string;
 }
 
+export class EditBotDto {
+  @IsString()
+  name: string
+
+  @IsString()
+  type: botTypes
+
+  @IsBoolean()
+  isActive: boolean;
+
+  @IsString()
+  token: string;
+}

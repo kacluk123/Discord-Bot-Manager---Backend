@@ -4,7 +4,7 @@ import { Bots } from './bots.entity'
 import { Repository } from 'typeorm';
 import { botTypes } from './bots.entity'
 import { throwIfEmpty } from 'rxjs/operators';
-import { CreateBotDto } from './bots.validators'
+import { CreateBotDto, EditBotDto } from './bots.validators'
 import { ICreateBotBody } from './bots.controller'
 
 export interface IBot {
@@ -21,7 +21,15 @@ export class BotsService {
   constructor(@InjectRepository(Bots) private readonly repo: Repository<Bots>) {}
 
   public async addBot(botData: ICreateBotBody): Promise<IBot> {
-    const bot = await this.repo.save<ICreateBotBody>(botData)
+    const bot = await this.repo.save(botData)
+    return bot
+  }
+
+  public async editBot(newBotData: EditBotDto, originalBot: IBot): Promise<IBot> {
+    const bot = await this.repo.save({
+      ...originalBot,
+      ...newBotData
+    })
     return bot
   }
 
@@ -35,5 +43,19 @@ export class BotsService {
     const bot = await this.repo.findOne({ id: botId });
 
     return bot
+  }
+
+  public async getBots(userId: string): Promise<IBot[]> {
+    const bot = await this.repo.find({ userId })
+
+    return bot
+  }
+
+  public async deleteBot(botId: string) {
+    const bot = await this.repo.delete({ id: botId })
+
+    return {
+      message: `Bot with ID: ${botId} has been deleted`
+    }
   }
 }
