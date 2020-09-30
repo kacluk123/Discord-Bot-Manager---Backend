@@ -49,7 +49,7 @@ export class LoginService {
   }): Promise<IDiscordTokenMappedResponse> {
     const response = this.httpService.post<IDiscordTokenResponse>(
       tokenUrl, 
-      `client_id=${clientId}&client_secret=${clientSecret}&grant_type=authorization_code&code=${authorizationCode}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin%2Ftoken&scope=connections%20guilds%20messages.read`,
+      `client_id=${clientId}&client_secret=${clientSecret}&grant_type=authorization_code&code=${authorizationCode}&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fdashboard&response_type=code&scope=identify%20guilds%20email%20messages.read`,
       {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'

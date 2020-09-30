@@ -29,7 +29,7 @@ export class LoginController {
 
   @Get('login/token')
   @UseInterceptors(CookieInterceptor)
-  async discordToken(@Query() query: GetTokenDto, @Req() request: RequestWithCookie): Promise<IDiscordUserMappedResponse> {
+  async discordToken(@Query() query: GetTokenDto, @Req() request: RequestWithCookie) {
     const tokenResponse = await this.loginService.getDiscordToken({
       clientId: CLIENT_ID,
       clientSecret: CLIENT_SECRET,
@@ -51,13 +51,11 @@ export class LoginController {
         cookie: cookie,
         name: 'Authorization',
         options: { 
-          httpOnly: true, 
-          secure: false 
-        }
+          httpOnly: false, 
+          secure: false,
+        },
       },
     ], request
     )
-
-    return user
   }
 }
