@@ -3,8 +3,8 @@ const client = new Discord.Client()
 
 // const client = new Discord.Client();
 export interface AdBotConfig {
-  timeToResend: number
-  aDtext: string
+  timeToResend: number | null
+  aDtext: string | null
 }
 
 class AdBot {

@@ -61,7 +61,7 @@ describe('Bots Controller', () => {
     const addBotMock = jest.spyOn(service, 'addBot').mockImplementation(async () => ({
       ...botPayload,
       userId: USER_ID,
-      id: BOT_ID
+      id: BOT_ID,
     }));
 
     const mewBot = await controller.addBot(fakeUser, botPayload)

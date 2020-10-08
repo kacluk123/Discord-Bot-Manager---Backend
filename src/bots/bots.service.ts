@@ -6,6 +6,7 @@ import { botTypes } from './bots.entity'
 import { throwIfEmpty } from 'rxjs/operators';
 import { CreateBotDto, EditBotDto } from './bots.validators'
 import { ICreateBotBody } from './bots.controller'
+import { AdBotConfig } from './botTypes/ad'
 
 export interface IBot {
   id: string
@@ -14,6 +15,21 @@ export interface IBot {
   isActive: boolean,
   token: string,
   userId: string
+  config: AdBotConfig
+}
+
+function createBotDependsOnType (botData: ICreateBotBody) {
+  switch (botData.type) {
+    case 'ads': {
+      return {
+        ...botData, 
+        config: {
+          timeToResend: null,
+          aDtext: null
+        }
+      }
+    }
+  }
 }
 
 @Injectable()
@@ -21,7 +37,8 @@ export class BotsService {
   constructor(@InjectRepository(Bots) private readonly repo: Repository<Bots>) {}
 
   public async addBot(botData: ICreateBotBody): Promise<IBot> {
-    const bot = await this.repo.save(botData)
+    const bot = await this.repo.save(createBotDependsOnType(botData))
+
     return bot
   }
 

@@ -18,6 +18,7 @@ import { RequestWithUser } from '../auth/jwt/jwt.strategy'
 import { User } from '../common/decorators/user'
 import { IUser} from '../auth/jwt/jwt.strategy'
 import AdBot from './botTypes/ad'
+import { AdBotConfig } from './botTypes/ad'
 export interface ICreateBotBody extends CreateBotDto {
   userId: string
 }
@@ -39,10 +40,11 @@ export class BotsController {
         ...body,
         userId: user.userId
       })
-      new AdBot({
-        aDtext: 'chuj',
-        timeToResend: 20
-      }).runBot()
+      
+      // new AdBot({
+      //   aDtext: 'chuj',
+      //   timeToResend: 20
+      // }).runBot()
 
       return createdBot
     }
