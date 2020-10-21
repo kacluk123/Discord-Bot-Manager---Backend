@@ -112,6 +112,8 @@ export class BotsController {
   async getBots(@User() user: IUser) {
     const bots = await this.botsService.getBots(user.userId)
 
-    return bots
+    return {
+      bots,
+    }
   }
 }

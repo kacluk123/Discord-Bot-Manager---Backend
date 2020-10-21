@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsBoolean } from 'class-validator'
+import { IsNotEmpty, IsString, IsBoolean, IsOptional } from 'class-validator'
 import { botTypes } from './bots.entity'
 
 export class CreateBotDto {
@@ -19,15 +19,19 @@ export class CreateBotDto {
 }
 
 export class EditBotDto {
+  @IsOptional()
   @IsString()
   name: string
-
+  
+  @IsOptional()
   @IsString()
   type: botTypes
-
+  
+  @IsOptional()
   @IsBoolean()
   isActive: boolean;
 
+  @IsOptional()
   @IsString()
   token: string;
 }
