@@ -1,3 +1,6 @@
+import { MainBot } from '../bots.factory'
+import { botTypes } from '../bots.entity'
+
 const Discord = require('discord.js');
 const client = new Discord.Client()
 
@@ -7,13 +10,19 @@ export interface AdBotConfig {
   aDtext: string | null
 }
 
-class AdBot {
+export interface MainOptions {
+  token: string
+  name: string
+  type: botTypes
+}
+
+export class AdBot implements MainBot {
   timeToResend: number
   aDtext: string
 
-  constructor(response: AdBotConfig) {
-    this.aDtext = response.aDtext
-    this.timeToResend = response.timeToResend
+  constructor(usabilityConfig: AdBotConfig, mainOptions: MainOptions) {
+    this.aDtext = usabilityConfig.aDtext
+    this.timeToResend = usabilityConfig.timeToResend
   }
 
   // public startSending() {

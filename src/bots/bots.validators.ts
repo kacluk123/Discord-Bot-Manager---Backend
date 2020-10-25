@@ -1,5 +1,7 @@
 import { IsNotEmpty, IsString, IsBoolean, IsOptional } from 'class-validator'
 import { botTypes } from './bots.entity'
+import { AdBotConfig } from './botTypes/ad'
+import { botConfigs } from './commonTypes'
 
 export class CreateBotDto {
   @IsString()
@@ -34,4 +36,7 @@ export class EditBotDto {
   @IsOptional()
   @IsString()
   token: string;
+
+  @IsOptional()
+  config: botConfigs;
 }

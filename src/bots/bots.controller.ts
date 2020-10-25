@@ -19,6 +19,7 @@ import { User } from '../common/decorators/user'
 import { IUser} from '../auth/jwt/jwt.strategy'
 import AdBot from './botTypes/ad'
 import { AdBotConfig } from './botTypes/ad'
+import Bot from './bots.factory'
 export interface ICreateBotBody extends CreateBotDto {
   userId: string
 }
@@ -41,11 +42,6 @@ export class BotsController {
         userId: user.userId
       })
       
-      // new AdBot({
-      //   aDtext: 'chuj',
-      //   timeToResend: 20
-      // }).runBot()
-
       return createdBot
     }
   }
@@ -98,6 +94,9 @@ export class BotsController {
     
       if (originalBot && isUserIdCorrect) {
         const modifiedBot = await this.botsService.editBot(body, originalBot)
+        const { config, ...rest } = body
+        const bot = new Bot().getBot(rest, config)
+        // bot.runBot()
         return modifiedBot
       } else {
         throw new HttpException('Bot is not exist', 401)
