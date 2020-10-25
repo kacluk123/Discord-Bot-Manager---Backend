@@ -1,15 +1,13 @@
-import { AdBotConfig } from './botTypes/ad'
+import { AdBotConfig, AdBot} from './botTypes/ad'
 
-export type botTypes = 'music' | 'ads'
+export type botNameTypes = 'music' | 'ads'
 
-interface x {
-  a: string
-}
+export type botConfigs = AdBotConfig
 
-export type botConfigs = AdBotConfig | x
+export type BotTypes = AdBot
 
 export function isSpecyficUsabilityConfig<T extends botConfigs>(config: botConfigs, 
-  botType: botTypes, 
-  wantedBotType: botTypes): config is T {
+  botType: botNameTypes, 
+  wantedBotType: botNameTypes): config is T {
     return botType === wantedBotType
 }

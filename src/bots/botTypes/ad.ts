@@ -34,7 +34,7 @@ export class AdBot implements MainBot {
   //   });
   // }
 
-  public runBot() {
+  public run() {
     client.on('ready', () => {
       console.log(`Logged in as ${client.user.tag}!`);
       console.log(client.channels.cache.get('736938961137827850').send('siema'))

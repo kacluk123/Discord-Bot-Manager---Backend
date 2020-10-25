@@ -1,20 +1,34 @@
 import { botTypes } from './bots.entity'
 import { AdBotConfig, AdBot, MainOptions } from './botTypes/ad'
-import { botConfigs, isSpecyficUsabilityConfig } from './commonTypes'
+import { botConfigs, isSpecyficUsabilityConfig, BotTypes } from './commonTypes'
 
 export interface MainBot {
-  runBot(): void
+  run(): void
 }
 
 class Bot {
-  public getBot(mainOptions: MainOptions, usabilityConfig: botConfigs) {
-    switch (mainOptions.type) {
+  private mainOptions: MainOptions
+  private usabilityConfig: botConfigs
+  private bot: MainBot
+
+  constructor(mainOptions: MainOptions, usabilityConfig: botConfigs) {
+    this.mainOptions = mainOptions
+    this.usabilityConfig = usabilityConfig
+    this.bot = this.getBot()
+  }
+  
+  private getBot() {
+    switch (this.mainOptions.type) {
       case 'ads': {
-        if (isSpecyficUsabilityConfig<AdBotConfig>(usabilityConfig, mainOptions.type, 'ads')) {
-          return new AdBot(usabilityConfig, mainOptions)
+        if (isSpecyficUsabilityConfig<AdBotConfig>(this.usabilityConfig, this.mainOptions.type, 'ads')) {
+          return new AdBot(this.usabilityConfig, this.mainOptions)
         }
       }
     }
+  }
+
+  public runBot() {
+    this.bot.run()
   }
 }
 

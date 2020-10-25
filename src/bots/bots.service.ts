@@ -6,7 +6,7 @@ import { botTypes } from './bots.entity'
 import { throwIfEmpty } from 'rxjs/operators';
 import { CreateBotDto, EditBotDto } from './bots.validators'
 import { ICreateBotBody } from './bots.controller'
-import { AdBotConfig } from './botTypes/ad'
+import { botConfigs } from './commonTypes'
 
 export interface IBot {
   id: string
@@ -15,7 +15,7 @@ export interface IBot {
   isActive: boolean,
   token: string,
   userId: string
-  config: AdBotConfig
+  config: botConfigs
 }
 
 function createBotDependsOnType (botData: ICreateBotBody) {
