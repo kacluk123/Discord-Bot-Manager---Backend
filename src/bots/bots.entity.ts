@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm'
 import { AdBotConfig } from './adbot.entity'
-export type botTypes = 'music' | 'ads'
+import { IAdBotConfig } from './botTypes/ad'
+export type botTypes = 'music' | 'ad'
 
 @Entity()
 export class Bots {
@@ -27,5 +28,5 @@ export class Bots {
     eager: true,
   })
   @JoinColumn()
-  public config: AdBotConfig;
+  public config: IAdBotConfig;
 }

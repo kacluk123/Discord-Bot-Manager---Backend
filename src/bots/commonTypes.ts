@@ -1,8 +1,8 @@
-import { AdBotConfig, AdBot} from './botTypes/ad'
+import { IAdBotConfig, AdBot} from './botTypes/ad'
 
-export type botNameTypes = 'music' | 'ads'
+export type botNameTypes = 'music' | 'ad'
 
-export type botConfigs = AdBotConfig
+export type botConfigs = IAdBotConfig
 
 export type BotTypes = AdBot
 

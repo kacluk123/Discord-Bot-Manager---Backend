@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, IsBoolean, IsOptional } from 'class-validator'
 import { botTypes } from './bots.entity'
-import { AdBotConfig } from './botTypes/ad'
+import { IAdBotConfig } from './botTypes/ad'
 import { botConfigs } from './commonTypes'
 
 export class CreateBotDto {

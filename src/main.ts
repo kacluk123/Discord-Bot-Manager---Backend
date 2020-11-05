@@ -1,7 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common'
 import { AppModule } from './app.module';
+import { BotsService } from './bots/bots.service'
 import * as cookieParser from 'cookie-parser';
+import Bot from './bots/bots.factory'
 
 async function bootstrap() {
   const fs = require('fs');
@@ -23,6 +25,20 @@ async function bootstrap() {
   });
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
+  const service = app.get(BotsService)
+
+  await runAllBots(service)
+
   await app.listen(3000);
 }
+
+async function runAllBots(service: BotsService) {
+  const bots = await service.getBots()
+
+  for (const bot of bots) {
+    const { config, ...rest} = bot
+    new Bot(service, rest, config).runBot()
+  }
+}
+
 bootstrap();

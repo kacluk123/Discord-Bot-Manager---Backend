@@ -18,7 +18,7 @@ import { RequestWithUser } from '../auth/jwt/jwt.strategy'
 import { User } from '../common/decorators/user'
 import { IUser} from '../auth/jwt/jwt.strategy'
 import AdBot from './botTypes/ad'
-import { AdBotConfig } from './botTypes/ad'
+import { IAdBotConfig } from './botTypes/ad'
 import Bot from './bots.factory'
 export interface ICreateBotBody extends CreateBotDto {
   userId: string
@@ -41,7 +41,13 @@ export class BotsController {
         ...body,
         userId: user.userId
       })
+
+      const { config, ...rest } = createdBot
+        
+      const bot = new Bot(this.botsService, rest, config)
       
+      await bot.runBot()
+
       return createdBot
     }
   }
@@ -94,10 +100,6 @@ export class BotsController {
     
       if (originalBot && isUserIdCorrect) {
         const modifiedBot = await this.botsService.editBot(body, originalBot)
-        const { config, ...rest } = body
-        const bot = new Bot(rest, config)
-        
-        bot.runBot()
 
         return modifiedBot
       } else {

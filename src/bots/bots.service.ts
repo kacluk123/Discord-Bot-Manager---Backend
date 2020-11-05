@@ -20,12 +20,11 @@ export interface IBot {
 
 function createBotDependsOnType (botData: ICreateBotBody) {
   switch (botData.type) {
-    case 'ads': {
+    case 'ad': {
       return {
         ...botData, 
         config: {
-          timeToResend: null,
-          aDtext: null
+          ads: []
         }
       }
     }
@@ -62,8 +61,8 @@ export class BotsService {
     return bot
   }
 
-  public async getBots(userId: string): Promise<IBot[]> {
-    const bot = await this.repo.find({ userId })
+  public async getBots(userId?: string): Promise<IBot[]> {
+    const bot = await this.repo.find(userId && { userId })
 
     return bot
   }
