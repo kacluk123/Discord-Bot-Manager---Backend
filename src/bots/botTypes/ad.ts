@@ -2,7 +2,8 @@ import { MainBot } from '../bots.factory'
 import { botTypes } from '../bots.entity'
 import { BotsService } from '../bots.service'
 // var schedule = require('node-schedule');
-import { scheduleJob } from 'node-schedule'
+import { scheduleJob, Job } from 'node-schedule'
+import { ADDRCONFIG } from 'dns';
 const Discord = require('discord.js');
 const client = new Discord.Client()
 
@@ -27,23 +28,15 @@ export interface MainOptions {
 export class AdBot implements MainBot {
   ads: IAdBotConfig['ads']
   mainOptions: MainOptions
+  allSchedules: Map<string, Job> = new Map()
 
   constructor(private readonly botsService: BotsService, usabilityConfig: IAdBotConfig, mainOptions: MainOptions) {
     this.ads = usabilityConfig.ads
     this.mainOptions = mainOptions
     setInterval(() => {
       this.getBotData()
-    }, 30000)
+    }, 5000)
   }
-
-  // public startSending() {
-  //   client.on('message', msg => {
-  //     // setInterval(() => {
-  //       msg.channel.send(this.aDtext)
-  //     // }, 1000)
-  //     console.log(msg)
-  //   });
-  // }
 
   public restart = async () => {
     this.run()
@@ -51,31 +44,49 @@ export class AdBot implements MainBot {
 
   public async getBotData() {
     const { config, ...rest } = await this.botsService.getBot(this.mainOptions.id)
-    console.log({
-      ...rest,
-      config
-    })
+
     this.mainOptions = rest
     this.ads = config.ads
+
+    this.rebuildAds(config.ads)
+  }
+
+  public rebuildAds = (ads: IAdBotConfig['ads']) => {
+    ads.forEach(ad => {
+      const existedAd = this.ads.find(existedAd => existedAd.id === ad.id)
+      const existedSchedule = this.allSchedules.get(ad.id)
+
+      // if (existedAd && (JSON.stringify(existedAd) !== JSON.stringify(ad))) {
+      //   existedSchedule.cancel()
+      //   const [hour, minute, second] = ad.time.split(':')
+      //   this.allSchedules.set(ad.id, scheduleJob({hour: hour, minute: minute, dayOfWeek: ad.day, second: second}, () => {
+      //     if (this.mainOptions.isActive) {
+      //       client.channels.cache.get('736938961137827850').send(ad.message)
+      //     }
+      //   }))
+      // } 
+      if (!existedSchedule) {
+        console.log('yes')
+        const [hour, minute, second] = ad.time.split(':')
+        this.allSchedules.set(ad.id, scheduleJob({hour: hour, minute: minute, dayOfWeek: ad.day, second: second}, () => {
+          if (this.mainOptions.isActive) {
+            client.channels.cache.get('736938961137827850').send(ad.message)
+          }
+        }))
+      }
+    })
   }
   
 
   public run() {
     client.on('ready', () => {
-      // const g = scheduleJob(`45 * * * *`, () => {
-      //   if (this.mainOptions.isActive) {
-      //     client.channels.cache.get('736938961137827850').send('dasdasd')
-      //   }
-      // });
-      
       this.ads.forEach(ad => {
         const [hour, minute, second] = ad.time.split(':')
-        console.log(`${second} ${minute} ${hour} * * * ${ad.day}`)
-        const g = scheduleJob({hour: hour, minute: minute, dayOfWeek: ad.day, second: second}, () => {
+        this.allSchedules.set(ad.id, scheduleJob({hour: hour, minute: minute, dayOfWeek: ad.day, second: second}, () => {
           if (this.mainOptions.isActive) {
             client.channels.cache.get('736938961137827850').send(ad.message)
           }
-        });
+        }))
       })
     })
 
