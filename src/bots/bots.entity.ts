@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm'
-import { AdBotConfig } from './adbot.entity'
 import { IAdBotConfig } from './botTypes/ad'
 export type botTypes = 'music' | 'ad'
 
@@ -22,11 +21,7 @@ export class Bots {
 
   @Column()
   userId: string;
-
-  @OneToOne(() => AdBotConfig, (adBotConfig: AdBotConfig) => adBotConfig.bot, {
-    cascade: true,
-    eager: true,
-  })
-  @JoinColumn()
+  
+  @Column('json', { nullable: true })
   public config: IAdBotConfig;
 }

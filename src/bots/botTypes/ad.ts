@@ -85,13 +85,13 @@ export class AdBot implements MainBot {
     ads.forEach(ad => {
       const existedAd = this.ads.find(existedAd => existedAd.id === ad.id)
       const existedSchedule = this.allSchedules.get(ad.id)
-
+      
       if (existedAd && (JSON.stringify(existedAd) !== JSON.stringify(ad))) {
+        console.log('hello')
         existedSchedule.cancel()
         this.runAd(ad, this.allSchedules)
       } 
       if (!existedSchedule) {
-        console.log('yes')
         this.runAd(ad, this.allSchedules)
       }
     })
