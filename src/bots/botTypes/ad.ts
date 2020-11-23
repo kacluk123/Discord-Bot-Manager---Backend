@@ -87,7 +87,6 @@ export class AdBot implements MainBot {
       const existedSchedule = this.allSchedules.get(ad.id)
       
       if (existedAd && (JSON.stringify(existedAd) !== JSON.stringify(ad))) {
-        console.log('hello')
         existedSchedule.cancel()
         this.runAd(ad, this.allSchedules)
       } 
