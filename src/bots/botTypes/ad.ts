@@ -4,9 +4,8 @@ import { BotsService } from '../bots.service'
 // var schedule = require('node-schedule');
 import { scheduleJob, Job } from 'node-schedule'
 const Discord = require('discord.js');
-const client = new Discord.Client()
+import { Client, TextChannel } from 'discord.js'
 
-// const client = new Discord.Client();
 export interface IAdBotConfig {
   ads: ISingleAd[]
 }
@@ -27,6 +26,7 @@ export interface MainOptions {
 }
 
 export class AdBot implements MainBot {
+  client: Client = new Client();
   ads: IAdBotConfig['ads']
   mainOptions: MainOptions
   allSchedules: Map<string, Job> = new Map()
@@ -76,8 +76,11 @@ export class AdBot implements MainBot {
 
   private runAd = (ad: ISingleAd, ads: Map<string, Job>) => {
     const [hour, minute, second] = ad.time.split(':')
-      ads.set(ad.id, scheduleJob({hour: hour, minute: minute, dayOfWeek: ad.day, second: second}, () => {
-        client.channels.cache.get('736938961137827850').send(ad.message)
+    const channel = this.client.channels.cache.get('736938961137827850')
+    ads.set(ad.id, scheduleJob({hour: hour, minute: minute, dayOfWeek: ad.day, second: second}, () => {
+      if (((logChannel): logChannel is TextChannel => logChannel.type === 'text')(channel)) {
+        channel.send(ad.message)
+      }
     }))
   }
 
@@ -104,13 +107,23 @@ export class AdBot implements MainBot {
   }
 
   public run() {
-    client.on('ready', () => {
-      if (this.mainOptions.isActive) {
-        this.allSchedules = this.runAds(this.ads)
+    let x = false
+    this.client.on('message', async (msg) => {
+      if (!x) {
+        setTimeout(() => {
+          msg.channel.send('Hello')
+        })
+        x = true
       }
     })
 
-    client.login(this.mainOptions.token);
+    // this.client.on('ready', () => {
+    //   if (this.mainOptions.isActive) {
+    //     this.allSchedules = this.runAds(this.ads)
+    //   }
+    // })
+
+    this.client.login(this.mainOptions.token);
   }
 }
 
