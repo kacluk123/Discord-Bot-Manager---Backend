@@ -31,11 +31,12 @@ export class AdBot implements MainBot {
   ads: IAdBotConfig['ads']
   mainOptions: MainOptions
   allSchedules: Map<string, Job> = new Map()
-  channelsWithAds: Set<string> = new Set();
+  channelsWithAds: Set<string>
 
   constructor(private readonly botsService: BotsService, usabilityConfig: IAdBotConfig, mainOptions: MainOptions) {
     this.ads = usabilityConfig.ads
     this.mainOptions = mainOptions
+    this.channelsWithAds = new Set(usabilityConfig.channelsToSend);
     setInterval(() => {
       this.reloadBot()
     }, 15000)
@@ -79,12 +80,10 @@ export class AdBot implements MainBot {
   }
 
   private runAd = (ad: ISingleAd, ads: Map<string, Job>) => {
-    console.log('elo')
     if (this.channelsWithAds.size > 0) {
       const [hour, minute, second] = ad.time.split(':')
       this.channelsWithAds.forEach((channelId) => {
         const channel = this.client.channels.cache.get(channelId)
-        console.log(channel)
         ads.set(ad.id, scheduleJob({hour: hour, minute: minute, dayOfWeek: ad.day, second: second}, () => {
           if (((logChannel): logChannel is TextChannel => logChannel.type === 'text')(channel)) {
             channel.send(ad.message)
@@ -153,6 +152,23 @@ export class AdBot implements MainBot {
                 channelsToSend: Array.from(this.channelsWithAds)
               }
             }, bot)
+          }
+        }
+      ],
+      [
+        '!remove-ad-bot', async () => {
+          if (this.channelsWithAds.has(message.channel.id)) {
+            this.channelsWithAds.delete(message.channel.id)
+            await message.channel.send('Now bot will not be sending ads to this channel!')
+            const bot = await this.botsService.getBot(this.mainOptions.id)
+            this.botsService.editBot({
+              config: {
+                ...bot.config,
+                channelsToSend: Array.from(this.channelsWithAds)
+              }
+            }, bot)
+          } else {
+            message.channel.send('Bot was never on this channel')
           }
         }
       ]
