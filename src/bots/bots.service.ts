@@ -41,7 +41,7 @@ export class BotsService {
     return bot
   }
 
-  public async editBot(newBotData: EditBotDto, originalBot: IBot): Promise<IBot> {
+  public async editBot(newBotData: Partial<EditBotDto>, originalBot: IBot): Promise<IBot> {
     const bot = await this.repo.save({
       ...originalBot,
       ...newBotData

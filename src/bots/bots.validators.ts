@@ -69,6 +69,11 @@ export class CreateBotDto {
 }
 
 class AdsBotDto {
+  @IsOptional()
+  @IsArray()
+  @IsNotEmpty()
+  channelsToSend: string[]
+  
   @ArrayMinSize(1)
   @IsArray()
   @ValidateNested({ each: true })
@@ -109,7 +114,7 @@ class AdBotDto {
   @IsString()
   @IsNotEmpty()
   day: string
-  
+
   @IsString()
   @IsNotEmpty()
   message: string
