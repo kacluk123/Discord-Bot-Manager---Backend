@@ -44,11 +44,15 @@ export class BotsController {
 
       const { config, ...rest } = createdBot
         
-      const bot = new Bot(this.botsService, rest, config)
-      
-      await bot.runBot()
+      try {
+        const bot = new Bot(this.botsService, rest, config)
+        await bot.runBot()
 
-      return createdBot
+        return createdBot
+      } catch (err) {
+        console.log(err)
+        throw new HttpException('Token is invalid', 401)
+      }
     }
   }
   
@@ -114,7 +118,7 @@ export class BotsController {
   @Get('/get-bots')
   async getBots(@User() user: IUser) {
     const bots = await this.botsService.getBots(user.userId)
-
+    
     return {
       bots,
     }

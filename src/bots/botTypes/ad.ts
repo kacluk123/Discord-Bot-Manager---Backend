@@ -116,24 +116,24 @@ export class AdBot implements MainBot {
   }
 
   public run() {
-    this.client.once('ready', () => {
-      if (this.mainOptions.isActive) {
-        this.allSchedules = this.runAds(this.ads)
-      }
-    })
-
-    this.client.on('message', async (message) => {
-      if (message.content.startsWith('!')) {
-        const func = this.getCommands(message).get(message.content)
-        if (func) {
-          func()
-        } else {
-          message.channel.send('Command does not exist!')
+      this.client.once('ready', () => {
+        if (this.mainOptions.isActive) {
+          this.allSchedules = this.runAds(this.ads)
         }
-      } 
-    })
-
-    this.client.login(this.mainOptions.token);
+      })
+  
+      this.client.on('message', async (message) => {
+        if (message.content.startsWith('!')) {
+          const func = this.getCommands(message).get(message.content)
+          if (func) {
+            func()
+          } else {
+            message.channel.send('Command does not exist!')
+          }
+        } 
+      })
+  
+      this.client.login(this.mainOptions.token)
   }
 
   private getCommands(message: Message) {
@@ -175,6 +175,5 @@ export class AdBot implements MainBot {
     ])
   }
 }
-
 
 export default AdBot
