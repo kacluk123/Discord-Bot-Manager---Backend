@@ -5,7 +5,6 @@ import { BotsService } from '../bots.service'
 import { scheduleJob, Job } from 'node-schedule'
 const Discord = require('discord.js');
 import { Client, TextChannel, Message } from 'discord.js'
-
 export interface IAdBotConfig {
   ads: ISingleAd[]
   channelsToSend: string[]
@@ -47,8 +46,9 @@ export class AdBot implements MainBot {
   }
 
   public async reloadBot() {
-    const { config, ...rest } = await this.botsService.getBot(this.mainOptions.id)
-    
+    const { config: resConfig , ...rest } = await this.botsService.getBot(this.mainOptions.id)
+    const config = resConfig as IAdBotConfig
+
     this.makeActionDependsOnCurrentBotState(rest, config)
 
     this.mainOptions = rest
@@ -116,24 +116,24 @@ export class AdBot implements MainBot {
   }
 
   public run() {
-      this.client.once('ready', () => {
-        if (this.mainOptions.isActive) {
-          this.allSchedules = this.runAds(this.ads)
+    this.client.once('ready', () => {
+      if (this.mainOptions.isActive) {
+        this.allSchedules = this.runAds(this.ads)
+      }
+    })
+
+    this.client.on('message', async (message) => {
+      if (message.content.startsWith('!')) {
+        const func = this.getCommands(message).get(message.content)
+        if (func) {
+          func()
+        } else {
+          message.channel.send('Command does not exist!')
         }
-      })
-  
-      this.client.on('message', async (message) => {
-        if (message.content.startsWith('!')) {
-          const func = this.getCommands(message).get(message.content)
-          if (func) {
-            func()
-          } else {
-            message.channel.send('Command does not exist!')
-          }
-        } 
-      })
-  
-      this.client.login(this.mainOptions.token)
+      } 
+    })
+
+    this.client.login(this.mainOptions.token)
   }
 
   private getCommands(message: Message) {

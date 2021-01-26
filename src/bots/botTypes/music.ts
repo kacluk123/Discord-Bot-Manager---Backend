@@ -2,8 +2,8 @@ import { MainBot } from '../bots.factory'
 const Discord = require('discord.js');
 import { Client, TextChannel, VoiceChannel, Message, Channel } from 'discord.js'
 import { BotsService } from '../bots.service'
-import ytdl from 'ytdl-core'
 import { MainOptions } from './ad' 
+const ytdl = require('ytdl-core')
 
 export interface IMusicBotConfig {
   playlist: string[]
@@ -35,18 +35,24 @@ export class MusicBot implements MainBot {
   }
 
   async play(channel: VoiceChannel) {
-    const connection = await channel.join()
-    connection.play(ytdl('https://www.youtube.com/watch?v=8v8gje3nsA0'))
+    try {
+      const streamOptions = { seek: 0, volume: 1 };
+      const connection = await channel.join()
+      const stream = ytdl('https://www.youtube.com/watch?v=-I9QH6gI6wM', { filter : 'audioonly' });
+      connection.play(stream, streamOptions);
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   private getCommands(message: Message) {
     return new Map([
       [
         '!join-music-bot', async () => {
-          const channel = this.client.channels.cache.get(message.channel.id)
-          if (((logChannel): logChannel is VoiceChannel => logChannel.type === 'text')(channel)) {
-            await message.channel.send('Now bot will be sending ads to this channel!')
-            this.play(channel)
+          const channel = message.member.voice.channel
+          if (((logChannel): logChannel is VoiceChannel => logChannel.type === 'voice')(channel)) {
+            await message.channel.send('Now bot will be playing music on this channel!')
+            await this.play(channel)
           }
           // this.botsService.editBot({
           //   config: {

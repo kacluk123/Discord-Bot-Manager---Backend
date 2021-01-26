@@ -51,6 +51,10 @@ export function isTime(validationOptions?: ValidationOptions) {
     });
   };
 }
+
+class BaseFeature {
+  type: botTypes
+}
 export class CreateBotDto {
   @IsString()
   @IsNotEmpty()
@@ -81,6 +85,11 @@ class AdsBotDto {
   ads: AdBotDto[]
 }
 
+class MusicBotDto {
+  @IsNotEmpty()
+  playlist: string[]
+}
+
 export class EditBotDto {
   @IsOptional()
   @IsString()
@@ -101,9 +110,19 @@ export class EditBotDto {
   @IsOptional()
   @IsObject()
   @ValidateNested()
-  @Type(() => AdsBotDto)
-  config: AdsBotDto;
+  @Type(() => BaseFeature, {
+    keepDiscriminatorProperty: true,
+    discriminator: {
+      property: 'type',
+      subTypes: [
+        { value: AdsBotDto, name: 'ad' },
+        { value: MusicBotDto, name: 'music' },
+      ],
+    },
+  })
+  config: AdsBotDto | MusicBotDto;
 }
+
 class AdBotDto {
   @isTime({ message: 'Invalid date format. Plase provide time in hh:mm:ss format '})
   @IsString()

@@ -18,6 +18,16 @@ export interface IBot {
   config: botConfigs
 }
 
+export interface IGetBot<T> {
+  id: string
+  name: string,
+  type: botTypes,
+  isActive: boolean,
+  token: string,
+  userId: string
+  config: T
+}
+
 function createBotDependsOnType (botData: ICreateBotBody) {
   switch (botData.type) {
     case 'ad': {
@@ -25,6 +35,14 @@ function createBotDependsOnType (botData: ICreateBotBody) {
         ...botData, 
         config: {
           ads: []
+        }
+      }
+    }
+    case 'music': {
+      return {
+        ...botData, 
+        config: {
+          playlist: []
         }
       }
     }
