@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpService, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Bots } from './bots.entity'
 import { Repository } from 'typeorm';
 import { botTypes } from './bots.entity'
-import { throwIfEmpty } from 'rxjs/operators';
+import { map, throwIfEmpty } from 'rxjs/operators';
 import { CreateBotDto, EditBotDto } from './bots.validators'
 import { ICreateBotBody } from './bots.controller'
 import { botConfigs } from './commonTypes'
-
+import { YOUTUBE_API_KEY } from '../config/youtube.secret'
 export interface IBot {
   id: string
   name: string,
@@ -26,6 +26,21 @@ export interface IGetBot<T> {
   token: string,
   userId: string
   config: T
+}
+
+export interface IYoutubeVideoResponse {
+  items: {
+    id: string,
+    snippet: {
+      title: string,
+      description: string,
+      thumbnails: {
+        default: {
+          url: string
+        }
+      }
+    }
+  }[]
 }
 
 function createBotDependsOnType (botData: ICreateBotBody) {
@@ -51,7 +66,10 @@ function createBotDependsOnType (botData: ICreateBotBody) {
 
 @Injectable()
 export class BotsService {
-  constructor(@InjectRepository(Bots) private readonly repo: Repository<Bots>) {}
+  constructor(
+    @InjectRepository(Bots) private readonly repo: Repository<Bots>,
+    private readonly httpService: HttpService,
+  ) {}
 
   public async addBot(botData: ICreateBotBody): Promise<IBot> {
     const bot = await this.repo.save(createBotDependsOnType(botData))
@@ -91,5 +109,22 @@ export class BotsService {
     return {
       message: `Bot with ID: ${botId} has been deleted`
     }
+  }
+
+  public async getYoutubeVideo(videoId: string) {
+    const response = this.httpService.get<IYoutubeVideoResponse>(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${YOUTUBE_API_KEY}`)
+
+    return response.pipe(
+      map((resp) => {
+        const video = resp.data.items[0]
+
+        return {
+          id: video.id,
+          title: video.snippet.title,
+          img: video.snippet.thumbnails.default.url,
+          description: video.snippet.description,
+        }
+      }),
+    ).toPromise();
   }
 }
