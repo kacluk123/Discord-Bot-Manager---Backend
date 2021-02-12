@@ -28,21 +28,6 @@ export interface IGetBot<T> {
   config: T
 }
 
-export interface IYoutubeVideoResponse {
-  items: {
-    id: string,
-    snippet: {
-      title: string,
-      description: string,
-      thumbnails: {
-        default: {
-          url: string
-        }
-      }
-    }
-  }[]
-}
-
 function createBotDependsOnType (botData: ICreateBotBody) {
   switch (botData.type) {
     case 'ad': {
@@ -109,22 +94,5 @@ export class BotsService {
     return {
       message: `Bot with ID: ${botId} has been deleted`
     }
-  }
-
-  public async getYoutubeVideo(videoId: string) {
-    const response = this.httpService.get<IYoutubeVideoResponse>(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${YOUTUBE_API_KEY}`)
-
-    return response.pipe(
-      map((resp) => {
-        const video = resp.data.items[0]
-
-        return {
-          id: video.id,
-          title: video.snippet.title,
-          img: video.snippet.thumbnails.default.url,
-          description: video.snippet.description,
-        }
-      }),
-    ).toPromise();
   }
 }

@@ -95,16 +95,6 @@ export class BotsController {
     }
   }
 
-  @UseGuards(JwtAuthenticationGuard)
-  @Get('/youtube/:id')
-  async getYoutubeVideoData(@Param() params) {
-    try {
-      const youtubeVideo = await this.botsService.getYoutubeVideo(params.id)
-      return youtubeVideo
-    } catch {
-      throw new HttpException('Wrong url', 400)
-    }
-  }
 
   @UseGuards(JwtAuthenticationGuard)
   @Patch('/bot/:id')

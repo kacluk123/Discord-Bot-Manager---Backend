@@ -102,7 +102,7 @@ export class MusicBot implements MainBot {
 }
 
 class PlayList {
-  public currentIndex: number = 0
+  private currentIndex: number = 0
   
   constructor(private songs: string[]) {}
 
@@ -114,9 +114,7 @@ class PlayList {
     }
   }
 
-  get song() {
+  public get song() {
     return this.songs[this.currentIndex]
   }
-
-
 }
