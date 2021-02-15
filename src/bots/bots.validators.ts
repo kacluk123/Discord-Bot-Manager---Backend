@@ -1,9 +1,11 @@
-import { IsNotEmpty, IsString, IsBoolean, IsOptional } from 'class-validator'
+import { IsNotEmpty, IsString, IsBoolean, IsOptional, isArray, ValidatorConstraint, ValidatorConstraintInterface, Validate } from 'class-validator'
 import { botTypes } from './bots.entity'
 import { IAdBotConfig } from './botTypes/ad'
 import { botConfigs } from './commonTypes'
 import { registerDecorator, ValidationOptions, ValidationArguments, IsObject, ValidateNested, IsArray, ArrayMinSize } from 'class-validator';
 import { Type } from 'class-transformer';
+import { Injectable } from '@nestjs/common';
+import { MusicService } from '../music/music.service'
 
 export function isDay(validationOptions?: ValidationOptions) {
   return (object: any, propertyName: string) => {
@@ -52,9 +54,22 @@ export function isTime(validationOptions?: ValidationOptions) {
   };
 }
 
-class BaseFeature {
-  type: botTypes
+@ValidatorConstraint({ name: 'IsValidMusicLinks', async: true })
+@Injectable()
+export class IsValidMusicLinks implements ValidatorConstraintInterface {
+	constructor(protected readonly musicService: MusicService) {}
+
+	async validate(value: string[]) {
+    try {
+      const ytLinksPromises = value.map(songId => this.musicService.getSongInfo(songId))
+      const data = await Promise.all(ytLinksPromises)
+      return true
+    } catch {
+      return false
+    }
+	}
 }
+
 export class CreateBotDto {
   @IsString()
   @IsNotEmpty()
@@ -72,7 +87,10 @@ export class CreateBotDto {
   token: string;
 }
 
-class AdsBotDto {
+class BaseFeature {
+  type: botTypes
+}
+class AdsBotDto  {
   @IsOptional()
   @IsArray()
   @IsNotEmpty()
@@ -85,8 +103,12 @@ class AdsBotDto {
   ads: AdBotDto[]
 }
 
-class MusicBotDto {
-  @IsNotEmpty()
+class MusicBotDto  {
+  @ArrayMinSize(1)
+  @IsArray()
+  @Validate(IsValidMusicLinks, {
+    message: 'Links are wrong',
+  })
   playlist: string[]
 }
 
@@ -111,7 +133,6 @@ export class EditBotDto {
   @IsObject()
   @ValidateNested()
   @Type(() => BaseFeature, {
-    keepDiscriminatorProperty: true,
     discriminator: {
       property: 'type',
       subTypes: [

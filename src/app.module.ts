@@ -14,7 +14,14 @@ import { MusicModule } from './music/music.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot(configService.getTypeOrmConfig()), UsersModule, LoginModule, CookiesModule, BotsModule, MusicModule],
+  imports: [
+    TypeOrmModule.forRoot(configService.getTypeOrmConfig()), 
+    UsersModule, 
+    LoginModule, 
+    CookiesModule, 
+    BotsModule, 
+    MusicModule,
+  ],
   controllers: [AppController, BotsController],
   providers: [AppService],
 })

@@ -34,6 +34,7 @@ function createBotDependsOnType (botData: ICreateBotBody) {
       return {
         ...botData, 
         config: {
+          type: botData.type,
           ads: []
         }
       }
@@ -42,6 +43,7 @@ function createBotDependsOnType (botData: ICreateBotBody) {
       return {
         ...botData, 
         config: {
+          type: botData.type,
           playlist: []
         }
       }
@@ -65,7 +67,7 @@ export class BotsService {
   public async editBot(newBotData: Partial<EditBotDto>, originalBot: IBot): Promise<IBot> {
     const bot = await this.repo.save({
       ...originalBot,
-      ...newBotData
+      ...newBotData,
     })
     return bot
   }

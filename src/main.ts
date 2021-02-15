@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { BotsService } from './bots/bots.service'
 import * as cookieParser from 'cookie-parser';
 import Bot from './bots/bots.factory'
+import { useContainer } from 'typeorm';
 
 async function bootstrap() {
   const fs = require('fs');
@@ -11,18 +12,16 @@ async function bootstrap() {
   const keyFile  = fs.readFileSync(__dirname + '/../ssl/localhost+2-key.pem');
   const certFile = fs.readFileSync(__dirname + '/../ssl/localhost+2.pem');
 
-  const app = await NestFactory.create(AppModule, {
-    // httpsOptions: {
-    //   key: keyFile,
-    //   cert: certFile,
-    // }
-  });
+  const app = await NestFactory.create(AppModule);
+  useContainer(app, {fallbackOnErrors: true})
+
   app.enableCors({  // wrong!  in my case, anyway
     origin: 'http://localhost:8080',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept',
     credentials: true,
   });
+
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
   const service = app.get(BotsService)

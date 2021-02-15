@@ -5,13 +5,16 @@ import { YouTube } from './youtube'
 
 @Module({
   providers: [
-    MusicService,
     {
       provide: 'musicInfoService',
-      useValue: new YouTube(new HttpService()),
+      useClass: YouTube,
     },
+    MusicService,
   ],
-  exports: [MusicService],
+  exports: [
+    MusicService,
+    'musicInfoService'
+  ],
   controllers: [MusicController],
   imports: [HttpModule]
 })
