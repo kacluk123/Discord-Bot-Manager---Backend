@@ -3,10 +3,15 @@ const Discord = require('discord.js');
 import { Client, TextChannel, VoiceChannel, Message, Channel, VoiceConnection, StreamDispatcher } from 'discord.js'
 import { BotsService } from '../bots.service'
 import { MainOptions } from './ad' 
+import { ISong } from 'src/music/music.controller';
 const ytdl = require('ytdl-core')
 
 export interface IMusicBotConfig {
   playlist: string[]
+}
+
+export interface IMusicBotConfigDBResponse {
+  playlist: ISong[]
 }
 
 export class MusicBot implements MainBot {

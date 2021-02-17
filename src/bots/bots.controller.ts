@@ -118,7 +118,7 @@ export class BotsController {
   @UseGuards(JwtAuthenticationGuard)
   @Get('/get-bots')
   async getBots(@User() user: IUser) {
-    const bots = await this.botsService.getBots(user.userId)
+    const bots = await this.botsService.getExtendedBots(user.userId)
     
     return {
       bots,

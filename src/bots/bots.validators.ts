@@ -4,8 +4,9 @@ import { IAdBotConfig } from './botTypes/ad'
 import { botConfigs } from './commonTypes'
 import { registerDecorator, ValidationOptions, ValidationArguments, IsObject, ValidateNested, IsArray, ArrayMinSize } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Injectable } from '@nestjs/common';
+import { HttpService, Inject, Injectable } from '@nestjs/common';
 import { MusicService } from '../music/music.service'
+import { YouTube } from 'src/music/youtube';
 
 export function isDay(validationOptions?: ValidationOptions) {
   return (object: any, propertyName: string) => {
@@ -54,20 +55,24 @@ export function isTime(validationOptions?: ValidationOptions) {
   };
 }
 
-@ValidatorConstraint({ name: 'IsValidMusicLinks', async: true })
+@ValidatorConstraint({ async: true })
 @Injectable()
 export class IsValidMusicLinks implements ValidatorConstraintInterface {
-	constructor(protected readonly musicService: MusicService) {}
+  private readonly musicService: MusicService = new MusicService(new YouTube(new HttpService()))
 
 	async validate(value: string[]) {
     try {
-      const ytLinksPromises = value.map(songId => this.musicService.getSongInfo(songId))
-      const data = await Promise.all(ytLinksPromises)
+      const musicIds = value.map(songId => this.musicService.getSongInfo(songId))
+      await Promise.all(musicIds)
       return true
     } catch {
       return false
     }
 	}
+
+  defaultMessage() {
+    return 'Not valid youtube link';
+  }
 }
 
 export class CreateBotDto {
@@ -106,9 +111,7 @@ class AdsBotDto  {
 class MusicBotDto  {
   @ArrayMinSize(1)
   @IsArray()
-  @Validate(IsValidMusicLinks, {
-    message: 'Links are wrong',
-  })
+  @Validate(IsValidMusicLinks)
   playlist: string[]
 }
 

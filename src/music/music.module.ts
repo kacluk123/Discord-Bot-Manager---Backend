@@ -10,9 +10,11 @@ import { YouTube } from './youtube'
       useClass: YouTube,
     },
     MusicService,
+    YouTube
   ],
   exports: [
     MusicService,
+    YouTube,
     'musicInfoService'
   ],
   controllers: [MusicController],

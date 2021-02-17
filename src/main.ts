@@ -13,7 +13,7 @@ async function bootstrap() {
   const certFile = fs.readFileSync(__dirname + '/../ssl/localhost+2.pem');
 
   const app = await NestFactory.create(AppModule);
-  useContainer(app, {fallbackOnErrors: true})
+  useContainer(app.select(AppModule), {fallbackOnErrors: true})
 
   app.enableCors({  // wrong!  in my case, anyway
     origin: 'http://localhost:8080',
@@ -23,7 +23,13 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,
+    forbidUnknownValues: true,
+    validationError: { 
+      target: false 
+    }
+  }));
   const service = app.get(BotsService)
 
   await runAllBots(service)

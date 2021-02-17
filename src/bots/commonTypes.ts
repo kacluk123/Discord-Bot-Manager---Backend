@@ -1,9 +1,11 @@
 import { IAdBotConfig, AdBot} from './botTypes/ad'
-import { IMusicBotConfig, MusicBot} from './botTypes/music'
+import { IMusicBotConfig, IMusicBotConfigDBResponse, MusicBot} from './botTypes/music'
 
 export type botNameTypes = 'music' | 'ad'
 
 export type botConfigs = IAdBotConfig | IMusicBotConfig
+
+export type botConfigsDBResponse = IAdBotConfig | IMusicBotConfigDBResponse
 
 export type BotTypes = AdBot | MusicBot
 
