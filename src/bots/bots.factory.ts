@@ -1,4 +1,3 @@
-import { botTypes } from './bots.entity'
 import { IAdBotConfig, AdBot, MainOptions } from './botTypes/ad'
 import { IMusicBotConfig, MusicBot } from './botTypes/music'
 import { botConfigs, isSpecyficUsabilityConfig, BotTypes } from './commonTypes'

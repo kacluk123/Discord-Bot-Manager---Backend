@@ -5,6 +5,9 @@ import { BotsService } from './bots/bots.service'
 import * as cookieParser from 'cookie-parser';
 import Bot from './bots/bots.factory'
 import { useContainer } from 'typeorm';
+import { BotsContainer } from './bots/botTypes/bots.container';
+
+let botsContainer: BotsContainer
 
 async function bootstrap() {
   const fs = require('fs');
@@ -31,19 +34,14 @@ async function bootstrap() {
     }
   }));
   const service = app.get(BotsService)
+  
+  const bots = await service.getBots()
+  
+  botsContainer = new BotsContainer(bots, service)
 
-  await runAllBots(service)
+  botsContainer.runAllBots()
 
   await app.listen(3000);
-}
-
-async function runAllBots(service: BotsService) {
-  const bots = await service.getBots()
-
-  for (const bot of bots) {
-    const { config, ...rest} = bot
-    new Bot(service, rest, config).runBot()
-  }
 }
 
 bootstrap();

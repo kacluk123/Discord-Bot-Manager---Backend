@@ -2,11 +2,10 @@ import { HttpException, HttpService, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Bots } from './bots.entity'
 import { Repository } from 'typeorm';
-import { botTypes } from './bots.entity'
 import { map, throwIfEmpty } from 'rxjs/operators';
 import { CreateBotDto, EditBotDto } from './bots.validators'
 import { ICreateBotBody } from './bots.controller'
-import { botConfigs, isSpecyficUsabilityConfig, botConfigsDBResponse } from './commonTypes'
+import { botConfigs, isSpecyficUsabilityConfig, botConfigsDBResponse, botNameTypes } from './commonTypes'
 import { YOUTUBE_API_KEY } from '../config/youtube.secret'
 import { MusicService } from 'src/music/music.service';
 import { IMusicBotConfig } from './botTypes/music';
@@ -15,7 +14,7 @@ import { IAdBotConfig } from './botTypes/ad';
 export interface IBot {
   id: string
   name: string,
-  type: botTypes,
+  type: botNameTypes,
   isActive: boolean,
   token: string,
   userId: string
@@ -29,7 +28,7 @@ export interface IBotsDBResponse extends Omit<IBot, 'config'> {
 export interface IGetBot<T> {
   id: string
   name: string,
-  type: botTypes,
+  type: botNameTypes,
   isActive: boolean,
   token: string,
   userId: string
@@ -102,7 +101,7 @@ export class BotsService {
   public async getExtendedBots(userId?: string) {
     try {
       const bots = await this.getBots(userId)
-      return this.buttBotsListWithAdditionalData(bots)
+      return this.buffBotsListWithAdditionalData(bots)
     } catch {
       throw new HttpException('Failed to get bots list', 400)
     }
@@ -116,7 +115,7 @@ export class BotsService {
     }
   }
 
-  private async buttBotsListWithAdditionalData(bots: IBot[]) {
+  private async buffBotsListWithAdditionalData(bots: IBot[]) {
     return Promise.all(bots.map(bot => this.buffBotWithAdditionalData(bot)))
   }
 

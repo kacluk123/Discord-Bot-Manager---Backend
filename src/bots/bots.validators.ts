@@ -1,7 +1,6 @@
 import { IsNotEmpty, IsString, IsBoolean, IsOptional, isArray, ValidatorConstraint, ValidatorConstraintInterface, Validate } from 'class-validator'
-import { botTypes } from './bots.entity'
 import { IAdBotConfig } from './botTypes/ad'
-import { botConfigs } from './commonTypes'
+import { botConfigs, botNameTypes } from './commonTypes'
 import { registerDecorator, ValidationOptions, ValidationArguments, IsObject, ValidateNested, IsArray, ArrayMinSize } from 'class-validator';
 import { Type } from 'class-transformer';
 import { HttpService, Inject, Injectable } from '@nestjs/common';
@@ -81,7 +80,7 @@ export class CreateBotDto {
   name: string
 
   @IsNotEmpty()
-  type: botTypes
+  type: botNameTypes
 
   @IsBoolean()
   @IsNotEmpty()
@@ -93,7 +92,7 @@ export class CreateBotDto {
 }
 
 class BaseFeature {
-  type: botTypes
+  type: botNameTypes
 }
 class AdsBotDto  {
   @IsOptional()
@@ -122,7 +121,7 @@ export class EditBotDto {
   
   @IsOptional()
   @IsString()
-  type: botTypes
+  type: botNameTypes
   
   @IsOptional()
   @IsBoolean()

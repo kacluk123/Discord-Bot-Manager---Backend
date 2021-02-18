@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm'
 import { IAdBotConfig } from './botTypes/ad'
 import { IMusicBotConfig } from './botTypes/music'
-export type botTypes = 'music' | 'ad'
+import { botNameTypes } from './commonTypes';
 
 @Entity()
 export class Bots {
@@ -12,7 +12,7 @@ export class Bots {
   name: string
 
   @Column()
-  type: botTypes
+  type: botNameTypes
 
   @Column({ default: true })
   isActive: boolean;

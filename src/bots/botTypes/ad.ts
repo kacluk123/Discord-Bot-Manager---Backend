@@ -1,10 +1,10 @@
 import { MainBot } from '../bots.factory'
-import { botTypes } from '../bots.entity'
 import { BotsService } from '../bots.service'
 // var schedule = require('node-schedule');
 import { scheduleJob, Job } from 'node-schedule'
 const Discord = require('discord.js');
 import { Client, TextChannel, Message } from 'discord.js'
+import { botNameTypes } from '../commonTypes';
 export interface IAdBotConfig {
   ads: ISingleAd[]
   channelsToSend: string[]
@@ -20,7 +20,7 @@ export interface ISingleAd {
 export interface MainOptions {
   token: string
   name: string
-  type: botTypes
+  type: botNameTypes
   isActive: boolean
   id: string
 }
