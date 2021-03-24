@@ -20,6 +20,7 @@ import { IUser} from '../auth/jwt/jwt.strategy'
 import AdBot from './botTypes/ad'
 import { IAdBotConfig } from './botTypes/ad'
 import Bot from './bots.factory'
+import { botsContainer } from '../main'
 export interface ICreateBotBody extends CreateBotDto {
   userId: string
 }
@@ -41,12 +42,9 @@ export class BotsController {
         ...body,
         userId: user.userId
       })
-
-      const { config, ...rest } = createdBot
         
       try {
-        const bot = new Bot(this.botsService, rest, config)
-        await bot.runBot()
+        botsContainer.addBot(createdBot)
 
         return createdBot
       } catch (err) {

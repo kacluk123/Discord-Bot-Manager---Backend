@@ -14,3 +14,9 @@ export function isSpecyficUsabilityConfig<T extends botConfigs>(config: botConfi
   wantedBotType: botNameTypes): config is T {
     return botType === wantedBotType
 }
+
+export function isSpecyficBot<T extends BotTypes>(bot: BotTypes, 
+  botType: botNameTypes, 
+  wantedBotType: botNameTypes): bot is T {
+    return botType === wantedBotType
+}

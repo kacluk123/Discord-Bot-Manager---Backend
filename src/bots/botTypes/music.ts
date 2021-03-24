@@ -28,6 +28,10 @@ export class MusicBot implements MainBot {
     this.mainOptions = mainOptions
   }
 
+  edit(playlist, ) {
+
+  }
+
   public run() {
     this.client.on('message', async (message) => {
       if (message.content.startsWith('!')) {

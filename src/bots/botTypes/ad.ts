@@ -41,6 +41,8 @@ export class AdBot implements MainBot {
     }, 15000)
   }
 
+  edit() {}
+
   public restart = async () => {
     this.run()
   }

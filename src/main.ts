@@ -7,7 +7,7 @@ import Bot from './bots/bots.factory'
 import { useContainer } from 'typeorm';
 import { BotsContainer } from './bots/botTypes/bots.container';
 
-let botsContainer: BotsContainer
+export let botsContainer: BotsContainer
 
 async function bootstrap() {
   const fs = require('fs');
@@ -39,7 +39,7 @@ async function bootstrap() {
   
   botsContainer = new BotsContainer(bots, service)
 
-  botsContainer.runAllBots()
+  await botsContainer.runAllBots()
 
   await app.listen(3000);
 }
