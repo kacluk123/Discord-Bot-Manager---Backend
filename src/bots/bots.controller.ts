@@ -103,8 +103,8 @@ export class BotsController {
     
       if (originalBot && isUserIdCorrect) {
         const modifiedBot = await this.botsService.editBot(body, originalBot)
-      
-        return modifiedBot
+        botsContainer.editBot(modifiedBot)
+        return modifiedBot  
       } else {
         throw new HttpException('Bot is not exist', 401)
       }

@@ -21,15 +21,13 @@ export class MusicBot implements MainBot {
   musicStream: StreamDispatcher
 
   constructor(private readonly botsService: BotsService, usabilityConfig: IMusicBotConfig, mainOptions: MainOptions) {
-    this.playlist = new PlayList([
-      'https://www.youtube.com/watch?v=d4_6N-k5VS4',
-      'https://www.youtube.com/watch?v=qMxX-QOV9tI'
-    ])
+    this.playlist = new PlayList(usabilityConfig.playlist)
     this.mainOptions = mainOptions
   }
 
-  edit(playlist, ) {
-
+  async edit(playlist: string[], mainOptions: MainOptions) {
+    this.playlist = new PlayList(playlist)
+    this.mainOptions = mainOptions
   }
 
   public run() {
@@ -66,7 +64,6 @@ export class MusicBot implements MainBot {
       this.playlist.nextSong()
       this.musicQuee(connection)
     })
-    
   }
 
   private getCommands(message: Message) {
@@ -124,6 +121,6 @@ class PlayList {
   }
 
   public get song() {
-    return this.songs[this.currentIndex]
+    return `https://www.youtube.com/watch?v=${this.songs[this.currentIndex]}`
   }
 }

@@ -29,26 +29,6 @@ export class BotsContainer {
     this.bots.set(bot.id, addedBot)
   }
 
-  private getBot(id: string) {
-    try {
-      const bot = this.bots.get(id)
-      switch (bot.mainOptions.type) {
-        // case 'ad': {
-        //   if (isSpecyficBot<IAdBotConfig>(config, bot.type, 'ad')) {
-        //     return new AdBot(this.botsService, config, rest)
-        //   }
-        // }
-        case 'music': {
-          if (isSpecyficBot<MusicBot>(bot, bot.mainOptions.type, 'music')) {
-            return bot
-          }
-        }
-      }
-    } catch {
-      console.error('Failed to get bot')
-    }
-  }
-
   private createBot(bot: IBot) {
     const { config, ...rest} = bot
     switch (bot.type) {
@@ -65,11 +45,11 @@ export class BotsContainer {
     }
   }
 
-  private editBot(bot: IBot) {
-    const { config, ...rest} = bot
-    const botObject = this.bots.get(bot.id)
+  public editBot(botData: IBot) {
+    const { config, ...rest} = botData
+    const bot = this.bots.get(botData.id)
     
-    switch (botObject.mainOptions.type) {
+    switch (bot.mainOptions.type) {
       // case 'ad': {
       //   if (isSpecyficBot<IAdBotConfig>(config, bot.type, 'ad')) {
       //     return new AdBot(this.botsService, config, rest)
@@ -77,10 +57,10 @@ export class BotsContainer {
       // }
       case 'music': {
         if (
-          isSpecyficBot<MusicBot>(botObject, botObject.mainOptions.type, 'music') 
-          && isSpecyficUsabilityConfig<IMusicBotConfig>(config, bot.type, 'music')
+          isSpecyficBot<MusicBot>(bot, bot.mainOptions.type, 'music') 
+          && isSpecyficUsabilityConfig<IMusicBotConfig>(config, botData.type, 'music')
         ) {
-          botObject.
+          bot.edit(config.playlist, rest)
         }
       }
     }
