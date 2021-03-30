@@ -28,14 +28,21 @@ export class MusicBot implements MainBot {
   async edit(playlist: string[], mainOptions: MainOptions) {
     this.playlist = new PlayList(playlist)
     this.mainOptions = mainOptions
+    
+    if (!mainOptions.isActive) {
+      this.client.destroy()
+    } else {
+      this.run()
+    }
   }
-
   public run() {
     this.client.on('message', async (message) => {
       if (message.content.startsWith('!')) {
         const func = this.getCommands(message).get(message.content)
-        if (func) {
+        if (func && this.mainOptions.isActive) {
           func()
+        } else if(!this.mainOptions.isActive) {
+          message.channel.send('Bot is currently disabled')
         } else {
           message.channel.send('Command does not exist!')
         }

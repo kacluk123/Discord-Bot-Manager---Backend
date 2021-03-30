@@ -50,11 +50,12 @@ export class BotsContainer {
     const bot = this.bots.get(botData.id)
     
     switch (bot.mainOptions.type) {
-      // case 'ad': {
-      //   if (isSpecyficBot<IAdBotConfig>(config, bot.type, 'ad')) {
-      //     return new AdBot(this.botsService, config, rest)
-      //   }
-      // }
+      case 'ad': {
+        if (isSpecyficBot<AdBot>(bot, bot.mainOptions.type, 'ad') 
+        && isSpecyficUsabilityConfig<IAdBotConfig>(config, botData.type, 'ad')) {
+          bot.edit(botData)
+        }
+      }
       case 'music': {
         if (
           isSpecyficBot<MusicBot>(bot, bot.mainOptions.type, 'music') 

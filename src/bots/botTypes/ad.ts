@@ -1,5 +1,5 @@
 import { MainBot } from '../bots.factory'
-import { BotsService } from '../bots.service'
+import { BotsService, IBot } from '../bots.service'
 // var schedule = require('node-schedule');
 import { scheduleJob, Job } from 'node-schedule'
 const Discord = require('discord.js');
@@ -36,40 +36,35 @@ export class AdBot implements MainBot {
     this.ads = usabilityConfig.ads
     this.mainOptions = mainOptions
     this.channelsWithAds = new Set(usabilityConfig.channelsToSend);
-    setInterval(() => {
-      this.reloadBot()
-    }, 15000)
+    console.log(usabilityConfig.channelsToSend)
+
+  
   }
 
-  edit() {}
+  edit(bot: IBot) {
+    this.reloadBot(bot)
+  }
 
   public restart = async () => {
     this.run()
   }
 
-  public async reloadBot() {
-    const { config: resConfig , ...rest } = await this.botsService.getBot(this.mainOptions.id)
+  public async reloadBot(bot: IBot) {
+    const { config: resConfig , ...rest } = bot
     const config = resConfig as IAdBotConfig
 
     this.makeActionDependsOnCurrentBotState(rest, config)
 
     this.mainOptions = rest
-    
-    this.ads = config.ads
 
+    this.ads = config.ads
     this.channelsWithAds = new Set(config.channelsToSend)
   }
 
   private makeActionDependsOnCurrentBotState(mainOptions: MainOptions , config: IAdBotConfig) {
-    if (this.allSchedules.size === 0 && mainOptions.isActive) {
-      this.allSchedules = this.runAds(config.ads)
-    }
-
     if (!mainOptions.isActive) {
       this.turnOffAllBots()
-    }
-
-    if (this.allSchedules.size > 0 && this.mainOptions.isActive) {
+    } else {
       this.rebuildAds(config.ads)
     }
   }
@@ -96,18 +91,25 @@ export class AdBot implements MainBot {
   }
 
   public rebuildAds = (ads: IAdBotConfig['ads']) => {
-    ads.forEach(ad => {
-      const existedAd = this.ads.find(existedAd => existedAd.id === ad.id)
-      const existedSchedule = this.allSchedules.get(ad.id)
-      
-      if (existedAd && (JSON.stringify(existedAd) !== JSON.stringify(ad))) {
-        existedSchedule.cancel()
-        this.runAd(ad, this.allSchedules)
-      } 
-      if (!existedSchedule) {
-        this.runAd(ad, this.allSchedules)
-      }
+    this.allSchedules.forEach(el => {
+      el.cancel()
     })
+    this.allSchedules = new Map()
+    this.allSchedules = this.runAds(ads)
+    // ads.forEach(ad => {
+      
+      // const existedAd = this.ads.find(existedAd => existedAd.id === ad.id)
+      // const existedSchedule = this.allSchedules.get(ad.id)
+      
+      // if (existedAd && (JSON.stringify(existedAd) !== JSON.stringify(ad))) {
+      //   existedSchedule.cancel()
+      //   this.runAd(ad, this.allSchedules)
+      // } 
+      // if (!existedSchedule) {
+      //   this.runAd(ad, this.allSchedules)
+      // }
+      
+    // })
   }
   
   private runAds = (ads: IAdBotConfig['ads']) => {
@@ -148,7 +150,7 @@ export class AdBot implements MainBot {
             this.channelsWithAds.add(message.channel.id)
             await message.channel.send('Now bot will be sending ads to this channel!')
             const bot = await this.botsService.getBot(this.mainOptions.id)
-            this.botsService.editBot({
+            const data = await this.botsService.editBot({
               config: {
                 ...bot.config,
                 channelsToSend: Array.from(this.channelsWithAds)
