@@ -35,6 +35,12 @@ export class MusicBot implements MainBot {
       this.run()
     }
   }
+
+  public delete = () => {
+    this.musicStream.destroy()
+    this.client.destroy()
+  }
+  
   public run() {
     this.client.on('message', async (message) => {
       if (message.content.startsWith('!')) {

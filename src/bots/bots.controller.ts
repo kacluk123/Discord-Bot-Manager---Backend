@@ -48,7 +48,6 @@ export class BotsController {
 
         return createdBot
       } catch (err) {
-        console.log(err)
         throw new HttpException('Token is invalid', 401)
       }
     }
@@ -60,12 +59,14 @@ export class BotsController {
     const bot = await this.botsService.getBot(params.id)
     if (bot) {
       const isUserIdCorrect = bot.userId === user.userId
-
       if (isUserIdCorrect && bot) {
         try {
+          botsContainer.deleteBot(params.id)
           const deleteResponse = await this.botsService.deleteBot(params.id)
+
           return deleteResponse
         } catch(err) {
+          console.log(err)
           return err
         }
       } else {

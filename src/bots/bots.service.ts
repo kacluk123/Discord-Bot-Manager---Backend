@@ -73,12 +73,10 @@ export class BotsService {
   }
 
   public async editBot(newBotData: Partial<EditBotDto>, originalBot: IBot): Promise<IBot> {
-    console.log('first', originalBot, newBotData)
     const bot = await this.repo.save({
       ...originalBot,
       ...newBotData,
     })
-    console.log(bot)
     return bot
   }
 
@@ -110,6 +108,7 @@ export class BotsService {
   }
 
   public async deleteBot(botId: string) {
+    console.log(botId)
     const bot = await this.repo.delete({ id: botId })
 
     return {

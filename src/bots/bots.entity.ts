@@ -5,7 +5,7 @@ import { botNameTypes } from './commonTypes';
 
 @Entity()
 export class Bots {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()

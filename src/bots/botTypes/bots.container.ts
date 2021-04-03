@@ -66,4 +66,10 @@ export class BotsContainer {
       }
     }
   }
+
+  public deleteBot(id: string) {
+    const bot = this.bots.get(id)
+    console.log(bot)
+    bot.delete()
+  }
 }

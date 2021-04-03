@@ -36,13 +36,17 @@ export class AdBot implements MainBot {
     this.ads = usabilityConfig.ads
     this.mainOptions = mainOptions
     this.channelsWithAds = new Set(usabilityConfig.channelsToSend);
-    console.log(usabilityConfig.channelsToSend)
-
-  
   }
 
   edit(bot: IBot) {
     this.reloadBot(bot)
+  }
+
+  public delete = () => {
+    this.allSchedules.forEach((value,key,map) => {
+      this.allSchedules.get(key).cancel()
+    })
+    this.client.destroy()
   }
 
   public restart = async () => {
@@ -96,20 +100,6 @@ export class AdBot implements MainBot {
     })
     this.allSchedules = new Map()
     this.allSchedules = this.runAds(ads)
-    // ads.forEach(ad => {
-      
-      // const existedAd = this.ads.find(existedAd => existedAd.id === ad.id)
-      // const existedSchedule = this.allSchedules.get(ad.id)
-      
-      // if (existedAd && (JSON.stringify(existedAd) !== JSON.stringify(ad))) {
-      //   existedSchedule.cancel()
-      //   this.runAd(ad, this.allSchedules)
-      // } 
-      // if (!existedSchedule) {
-      //   this.runAd(ad, this.allSchedules)
-      // }
-      
-    // })
   }
   
   private runAds = (ads: IAdBotConfig['ads']) => {
