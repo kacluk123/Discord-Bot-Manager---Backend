@@ -6,6 +6,7 @@ import { AxiosResponse } from 'axios'
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators' 
 import  { JwtService } from '@nestjs/jwt'
+import { configService } from 'src/config/config.service';
 
 export interface IDiscordTokenResponse {
   access_token: string
@@ -49,7 +50,7 @@ export class LoginService {
   }): Promise<IDiscordTokenMappedResponse> {
     const response = this.httpService.post<IDiscordTokenResponse>(
       tokenUrl, 
-      `client_id=${clientId}&client_secret=${clientSecret}&grant_type=authorization_code&code=${authorizationCode}&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fdashboard&response_type=code&scope=identify%20guilds%20email%20messages.read`,
+      `client_id=${clientId}&client_secret=${clientSecret}&grant_type=authorization_code&code=${authorizationCode}&redirect_uri=${configService.getValue('REDIRECT_URL')}&response_type=code&scope=identify%20guilds%20email%20messages.read`,
       {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'

@@ -19,7 +19,7 @@ class ConfigService {
     return mode != 'DEV';
   }
 
-  private getValue(key: string, throwOnMissing = true): string {
+  public getValue(key: string, throwOnMissing = true): string {
     const value = this.env[key];
     if (!value && throwOnMissing) {
       throw new Error(`config error - missing env.${key}`);
@@ -58,7 +58,8 @@ const configService = new ConfigService(process.env)
     'POSTGRES_PORT',
     'POSTGRES_USER',
     'POSTGRES_PASSWORD',
-    'POSTGRES_DATABASE'
+    'POSTGRES_DATABASE',
+    'REDIRECT_URL'
   ]);
 
 export { configService };
