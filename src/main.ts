@@ -41,7 +41,7 @@ async function bootstrap() {
 
   await botsContainer.runAllBots()
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT);
 }
 
 bootstrap();
