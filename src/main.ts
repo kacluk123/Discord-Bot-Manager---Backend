@@ -17,7 +17,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
   useContainer(app.select(AppModule), {fallbackOnErrors: true})
-
+  console.log(process.env.REDIRECT_URL)
   app.enableCors({  // wrong!  in my case, anyway
     origin: 'http://localhost:8080',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
