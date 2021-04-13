@@ -37,7 +37,7 @@ export class LoginController {
     })
     
     const user = await this.usersService.getDiscordUser(tokenResponse.accessToken)
-
+    console.log(tokenResponse.accessToken)
     const cookie = this.loginService.getJwtToken({ 
       expireTime: tokenResponse.expiresIn,
       payload: {
