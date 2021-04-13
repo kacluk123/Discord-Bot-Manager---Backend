@@ -53,7 +53,7 @@ export class LoginController {
         options: { 
           httpOnly: true, 
           secure: true,
-          SameSite: 'None'
+          sameSite: 'none'
         },
       },
     ], request

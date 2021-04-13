@@ -7,7 +7,7 @@ interface ICookie {
   options: {
     httpOnly?: boolean,
     secure?: boolean,
-    SameSite?: string
+    sameSite?: boolean | "none" | "lax" | "strict"
   }
 }
 
