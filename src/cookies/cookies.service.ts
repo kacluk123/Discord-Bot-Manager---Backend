@@ -6,7 +6,8 @@ interface ICookie {
   cookie: string
   options: {
     httpOnly?: boolean,
-    secure?: boolean
+    secure?: boolean,
+    SameSite?: string
   }
 }
 
