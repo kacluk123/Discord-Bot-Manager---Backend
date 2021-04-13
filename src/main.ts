@@ -19,7 +19,7 @@ async function bootstrap() {
   useContainer(app.select(AppModule), {fallbackOnErrors: true})
   console.log(process.env.REDIRECT_URL)
   app.enableCors({  // wrong!  in my case, anyway
-    origin: 'http://localhost:8080',
+    origin: ['http://localhost:8080', 'https://bot-manager-front.herokuapp.com'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept',
     credentials: true,
