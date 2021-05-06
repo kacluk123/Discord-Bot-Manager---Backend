@@ -4,14 +4,14 @@ import { LoginController } from './login.controller';
 import { UsersModule } from '../../users/users.module'
 import { CookiesModule } from '../../cookies/cookies.module'
 import  { JwtModule } from '@nestjs/jwt'
-import JwtSecret from '../../config/jwt.secret'
 import { JwtStrategy } from '../jwt/jwt.strategy'
+import { configService } from 'src/config/config.service';
 
 @Module({
   providers: [LoginService, JwtStrategy],
   controllers: [LoginController],
   imports: [HttpModule, UsersModule, JwtModule.register({
-    secret: JwtSecret
+    secret: configService.getValue('JWT_SECRET')
   }), CookiesModule],
 })
 export class LoginModule {}

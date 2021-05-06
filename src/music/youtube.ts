@@ -1,7 +1,7 @@
 import { HttpService, Injectable } from "@nestjs/common";
 import { map } from "rxjs/operators";
 import { IMusic } from './music.controller' 
-import { YOUTUBE_API_KEY } from '../config/youtube.secret'
+import { configService } from "src/config/config.service";
 
 export interface IYoutubeVideoResponse {
   items: {
@@ -24,7 +24,7 @@ export class YouTube implements IMusic {
   
   public async fetchSongData(videoId: string) {
     const response = this.httpService.get<IYoutubeVideoResponse>(`
-      https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${YOUTUBE_API_KEY}
+      https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}&key=${configService.getValue('YT_KEY')}
     `)
 
     return response.pipe(

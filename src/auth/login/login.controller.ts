@@ -1,18 +1,12 @@
 import { Controller, Get, Redirect, Res, Query, Req, UseInterceptors } from '@nestjs/common';
-import { CLIENT_ID, CLIENT_SECRET } from '../../discord/consts'
 import { LoginService } from './login.service'
 import { getAuthorizeUrl } from '../../discord/helpers'
 import { UsersService } from '../../users/users.service';
 import { CookiesService } from '../../cookies/cookies.service';
 import { GetTokenDto } from './login.validators'
-import { IDiscordUserMappedResponse } from '../../users/users.service'
-import jwtSecret from '../../config/jwt.secret'
-import { Response, Request } from 'express'
-import fetch from 'node-fetch'
-import btoa from 'btoa'
 import { CookieInterceptor } from './login.interceptor'
 import { RequestWithCookie } from '../../cookies/cookies.service'
-import { sign } from "jsonwebtoken";
+import { configService } from 'src/config/config.service';
 
 @Controller()
 export class LoginController {
@@ -23,7 +17,7 @@ export class LoginController {
   ) {}
   
   @Get('login')
-  @Redirect(getAuthorizeUrl(CLIENT_ID), 301)
+  @Redirect(getAuthorizeUrl(configService.getValue('CLIENT_ID')), 301)
   redirectToDiscord() {}
 
 
@@ -31,8 +25,8 @@ export class LoginController {
   @UseInterceptors(CookieInterceptor)
   async discordToken(@Query() query: GetTokenDto, @Req() request: RequestWithCookie) {
     const tokenResponse = await this.loginService.getDiscordToken({
-      clientId: CLIENT_ID,
-      clientSecret: CLIENT_SECRET,
+      clientId: configService.getValue('CLIENT_ID'),
+      clientSecret: configService.getValue('CLIENT_SECRET'),
       authorizationCode: query.code
     })
     

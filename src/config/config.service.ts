@@ -30,9 +30,9 @@ class ConfigService {
 
   public getTypeOrmConfig(): TypeOrmModuleOptions {
     const fs = require('fs');
-    const sslDir = __dirname + '/../../ssl'
-    const keyFile  = fs.readFileSync(sslDir + '/localhost+2-key.pem');
-    const certFile  = fs.readFileSync(sslDir + '/localhost+2.pem');
+    // const sslDir = __dirname + '/../../ssl'
+    // const keyFile  = fs.readFileSync(sslDir + '/localhost+2-key.pem');
+    // const certFile  = fs.readFileSync(sslDir + '/localhost+2.pem');
     
     return {
       type: 'postgres',
@@ -45,8 +45,8 @@ class ConfigService {
       synchronize: true,
       ssl: {
         rejectUnauthorized: false,
-        ca: certFile.toString(),
-        key: keyFile.toString()
+        // ca: certFile.toString(),
+        // key: keyFile.toString()
       }
     };
   }
@@ -59,7 +59,11 @@ const configService = new ConfigService(process.env)
     'POSTGRES_USER',
     'POSTGRES_PASSWORD',
     'POSTGRES_DATABASE',
-    'REDIRECT_URL'
+    'REDIRECT_URL',
+    'CLIENT_ID',
+    'CLIENT_SECRET',
+    'JWT_SECRET',
+    'YT_KEY'
   ]);
 
 export { configService };

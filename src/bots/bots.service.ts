@@ -6,7 +6,6 @@ import { map, throwIfEmpty } from 'rxjs/operators';
 import { CreateBotDto, EditBotDto } from './bots.validators'
 import { ICreateBotBody } from './bots.controller'
 import { botConfigs, isSpecyficUsabilityConfig, botConfigsDBResponse, botNameTypes } from './commonTypes'
-import { YOUTUBE_API_KEY } from '../config/youtube.secret'
 import { MusicService } from 'src/music/music.service';
 import { IMusicBotConfig } from './botTypes/music';
 import { IAdBotConfig } from './botTypes/ad';

@@ -10,15 +10,10 @@ import { BotsContainer } from './bots/botTypes/bots.container';
 export let botsContainer: BotsContainer
 
 async function bootstrap() {
-  const fs = require('fs');
-  const path = require('path');
-  const keyFile  = fs.readFileSync(__dirname + '/../ssl/localhost+2-key.pem');
-  const certFile = fs.readFileSync(__dirname + '/../ssl/localhost+2.pem');
-
   const app = await NestFactory.create(AppModule);
   useContainer(app.select(AppModule), {fallbackOnErrors: true})
-  console.log(process.env.REDIRECT_URL)
-  app.enableCors({  // wrong!  in my case, anyway
+
+  app.enableCors({ 
     origin: ['http://localhost:8080', 'https://bot-manager-front.herokuapp.com'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept',

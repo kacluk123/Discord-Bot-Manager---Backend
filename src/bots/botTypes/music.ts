@@ -37,7 +37,9 @@ export class MusicBot implements MainBot {
   }
 
   public delete = () => {
-    this.musicStream.destroy()
+    if (this.musicStream) {
+      this.musicStream.destroy()
+    }
     this.client.destroy()
   }
   
